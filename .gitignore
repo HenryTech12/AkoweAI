@@ -1,0 +1,186 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.*.example
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+.vim/
+.emacs.desktop
+*.elc
+.elc-*
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+.nox/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+dump.rdb
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.pgdump
+migrations/versions/
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Node (if using frontend build tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Build & Distribution
+dist/
+build/
+*.tar.gz
+*.zip
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# IDE Cache
+*.cache
+.cache/
+.eslintcache
+.prettier-cache
+
+# Credentials & Secrets (Extra Safety)
+*credentials*
+*secret*
+*key.pem
+*.pem
+private_key*
+
+# AWS/S3 (Legacy)
+.aws/
+aws_credentials
+
+# Local Config Files
+config.local.py
+local_settings.py
+
+# Generated Files
+*.generated.py
+*.auto.py
+
+# Backup Files
+*.orig
+backup/
+
+# Runtime Files
+*.pid
+*.sock
+.env.production.local
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Mac
+.AppleDouble
+.LSOverride
+
+# Pyre Type Checker
+.pyre/
+.pytype/
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Black Formatter
+.black-cache/
+
+# Isort
+.isort.cfg
+
+# Project Specific
+*.ppt
+*.pptx
+test_output/
+reports/temp/
+uploads/
+media/
+static/
+.env.*.encrypted
