@@ -1,12 +1,12 @@
 """Dependency injection and authentication."""
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
-from fastapi.security.http import HTTPAuthenticationCredentials
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from config import settings
 from model.database import SessionLocal
 from db.crud import get_user
+from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ def create_refresh_token(user_id: str) -> str:
     return encoded_jwt
 
 
-async def get_current_user(credentials: HTTPAuthenticationCredentials = Depends(security)):
+async def get_current_user(credentials = Depends(security)):
     """
     Validate and extract current user from JWT token.
 
@@ -108,7 +108,7 @@ async def get_current_user(credentials: HTTPAuthenticationCredentials = Depends(
         db.close()
 
 
-async def get_optional_user(credentials: HTTPAuthenticationCredentials = Depends(security)) -> dict:
+async def get_optional_user(credentials = Depends(security)):
     """
     Optionally get user from token (for public endpoints that can also be authenticated).
 
