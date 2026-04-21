@@ -17,7 +17,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    phone_number = Column(String(20), unique=True, nullable=False, index=True)
+    phone_number = Column(String(50), unique=True, nullable=False, index=True)
     business_name = Column(String(255))
     preferred_dialect = Column(String(50), default="english")  # pidgin, yoruba, igbo, hausa, english
     business_type = Column(String(100))
@@ -182,7 +182,7 @@ class RegistrationSession(Base):
     __tablename__ = "registration_sessions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    phone_number = Column(String(20), unique=True, nullable=False, index=True)
+    phone_number = Column(String(50), unique=True, nullable=False, index=True)
     
     # Registration progress
     step = Column(String(50), default="awaiting_business_name")  # awaiting_business_name, awaiting_dialect, awaiting_business_type, completed
