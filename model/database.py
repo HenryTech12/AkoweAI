@@ -53,7 +53,7 @@ class Transaction(Base):
     counterparty = Column(String(255))
     source = Column(String(50), default="manual")  # voice, image, text, manual
     confidence = Column(Float, default=1.0)
-    metadata = Column(JSON)
+    meta = Column(JSON)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
