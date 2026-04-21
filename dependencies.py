@@ -1,6 +1,7 @@
 """Dependency injection and authentication."""
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthenticationCredentials
+from fastapi.security import HTTPBearer
+from fastapi.security.http import HTTPAuthenticationCredentials
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from config import settings

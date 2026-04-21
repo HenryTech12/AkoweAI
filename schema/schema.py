@@ -1,5 +1,5 @@
 """Pydantic schemas for AkoweAI API."""
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 from typing import Optional, List
 from uuid import UUID
@@ -61,7 +61,8 @@ class TransactionCreate(BaseModel):
     counterparty: Optional[str] = None
     items: Optional[List[TransactionItemBase]] = None
 
-    @validator("category")
+    @field_validator("category")
+    @classmethod
     def validate_category(cls, v):
         if v not in ["income", "expense", "debt"]:
             raise ValueError("category must be income, expense, or debt")

@@ -1,12 +1,13 @@
 """OpenAI Whisper service for audio transcription."""
-import openai
+from openai import OpenAI
 from config import settings
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
-openai.api_key = settings.openai_api_key
+# Initialize OpenAI client
+client = OpenAI(api_key=settings.openai_api_key)
 
 
 async def transcribe_audio(audio_file_path: str, language: str = None) -> str:
@@ -22,7 +23,7 @@ async def transcribe_audio(audio_file_path: str, language: str = None) -> str:
     """
     try:
         with open(audio_file_path, "rb") as audio_file:
-            transcript = openai.audio.transcriptions.create(
+            transcript = client.audio.transcriptions.create(
                 model="whisper-1",
                 file=audio_file,
                 language=language if language else None,
@@ -55,7 +56,7 @@ async def transcribe_audio_from_bytes(audio_bytes: bytes, filename: str, languag
         audio_file = BytesIO(audio_bytes)
         audio_file.name = filename
 
-        transcript = openai.audio.transcriptions.create(
+        transcript = client.audio.transcriptions.create(
             model="whisper-1",
             file=audio_file,
             language=language if language else None,

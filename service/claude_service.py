@@ -6,7 +6,7 @@ import json
 
 logger = logging.getLogger(__name__)
 
-client = Anthropic()
+client = Anthropic(api_key=settings.claude_api_key)
 
 
 async def extract_transaction_from_text(text: str, dialect: str = "english", user_id: str = None) -> dict:
