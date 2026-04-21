@@ -1,11 +1,12 @@
 """WhatsApp message sending task."""
 import logging
+import asyncio
 from service.whatsapp_service import send_text_message
 
 logger = logging.getLogger(__name__)
 
 
-async def send_message(phone_number: str, message_text: str):
+def send_message(phone_number: str, message_text: str):
     """
     Send WhatsApp message.
 
@@ -17,7 +18,7 @@ async def send_message(phone_number: str, message_text: str):
         Response from WhatsApp API
     """
     try:
-        response = await send_text_message(phone_number, message_text)
+        response = asyncio.run(send_text_message(phone_number, message_text))
         logger.info(f"WhatsApp message sent to {phone_number}")
         return response
 

@@ -1,5 +1,6 @@
 """Financial report generation task."""
 import logging
+import asyncio
 from sqlalchemy.orm import Session
 from datetime import datetime
 from uuid import UUID
@@ -14,7 +15,97 @@ import json
 logger = logging.getLogger(__name__)
 
 
-async def generate_report(user_id: str, report_type: str, start_date: str, end_date: str):
+def generate_report(user_id: str, report_type: str, start_date: str, end_date: str):
+    """
+    Generate financial report:
+    1. Fetch user transactions
+    2. Calculate statistics
+    3. Generate insights
+    4. Create PDF
+    5. Upload to Cloudinary
+    """
+    db: Session = SessionLocal()
+
+    try:
+        user_id_uuid = UUID(user_id)
+        start_dt = datetime.fromisoformat(start_date)
+        end_dt = datetime.fromisoformat(end_date)
+
+        # Fetch transactions for the period
+        transactions, total = get_user_transactions(
+            db,
+            user_id_uuid,
+            start_date=start_dt,
+            end_date=end_dt,
+            limit=1000
+        )
+
+        # Calculate statistics
+        stats = get_transaction_statistics(db, user_id_uuid, period_days=30)
+
+        # Prepare transaction data for insights
+        transactions_data = [
+            {
+                "id": str(t.id),
+                "amount": float(t.amount),
+                "currency": t.currency,
+                "category": t.category,
+                "description": t.description,
+                "date": t.transaction_date.isoformat()
+            }
+            for t in transactions
+        ]
+
+        # Generate insights using Claude (run async function)
+        insights = asyncio.run(generate_financial_insights(transactions_data))
+
+        # Calculate credit score estimate
+        credit_score = insights.get("credit_score_estimate", 50)
+
+        # Prepare summary data
+        summary_data = {
+            "total_transactions": total,
+            "total_income": float(stats.get("total_income", 0)),
+            "total_expenses": float(stats.get("total_expenses", 0)),
+            "total_debts": float(stats.get("total_debts", 0)),
+            "net_profit": float(stats.get("net_profit", 0)),
+            "credit_score": credit_score,
+            "insights": insights,
+            "period": {
+                "start": start_date,
+                "end": end_date
+            }
+        }
+
+        # Generate PDF
+        pdf_bytes = _generate_pdf(summary_data, transactions_data)
+
+        # Upload PDF to Cloudinary
+        pdf_filename = f"{report_type}_{datetime.utcnow().timestamp()}.pdf"
+        pdf_key = asyncio.run(upload_file(pdf_bytes, pdf_filename, f"reports/{user_id}"))
+
+        # Update report in database
+        report_update = {
+            "status": "completed",
+            "pdf_s3_key": pdf_key,
+            "summary_data": summary_data
+        }
+
+        logger.info(f"Report generated for user {user_id}: {report_type}")
+
+        return {
+            "status": "success",
+            "report_type": report_type,
+            "pdf_key": pdf_key,
+            "summary": summary_data
+        }
+
+    except Exception as e:
+        logger.error(f"Error generating report: {str(e)}")
+        raise
+
+    finally:
+        db.close()
     """
     Generate financial report:
     1. Fetch user transactions

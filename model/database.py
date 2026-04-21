@@ -203,3 +203,31 @@ class RegistrationSession(Base):
         Index("idx_registration_sessions_phone", "phone_number"),
         Index("idx_registration_sessions_step", "step", "updated_at"),
     )
+
+
+# Database connection
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from config import settings
+
+engine = create_engine(
+    settings.database_url,
+    echo=settings.sqlalchemy_echo,
+    pool_pre_ping=True
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+def get_db():
+    """Dependency for getting database session."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def init_db() -> None:
+    """Initialize database tables."""
+    Base.metadata.create_all(bind=engine)
