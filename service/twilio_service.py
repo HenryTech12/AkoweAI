@@ -69,13 +69,18 @@ async def send_whatsapp_message(phone_number: str, message_text: str) -> dict:
     try:
         client = get_twilio_client()
         
-        # Ensure phone number is in E.164 format
-        if not phone_number.startswith('+'):
-            phone_number = f"+234{phone_number.lstrip('0')}" if phone_number.startswith('0') else f"+{phone_number}"
+        # Ensure phone number is in E.164 format or already a WhatsApp number
+        if phone_number.startswith("whatsapp:"):
+            to_number = phone_number
+        else:
+            if not phone_number.startswith('+'):
+                phone_number = f"+234{phone_number.lstrip('0')}" if phone_number.startswith('0') else f"+{phone_number}"
+            to_number = f"whatsapp:{phone_number}"
         
-        # Format phone numbers for WhatsApp (whatsapp:+1234567890)
-        from_number = f"whatsapp:{settings.twilio_whatsapp_number or settings.twilio_phone_number}"
-        to_number = f"whatsapp:{phone_number}"
+        # Format sender number for WhatsApp
+        from_number = settings.twilio_whatsapp_number or settings.twilio_phone_number
+        if not from_number.startswith("whatsapp:"):
+            from_number = f"whatsapp:{from_number}"
         
         message = client.messages.create(
             body=message_text,
